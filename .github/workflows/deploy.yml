@@ -6,3 +6,28 @@ on:
       - main  
     paths:
       - 'frontend/**'
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest  # this is a self hosted windows server
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Get TIMESTAMP
+      id: get-timestamp
+      run: |
+        echo "::set-output name=timestamp::$(date +'%Y%m%d%H%M')"
+    
+    - name: Extract version tag
+      id: extract_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+    - name: Print release information
+      run: |
+        echo "A new release was created!"
+        echo "Release tag: ${{ github.event.release.tag_name }}"
+        echo "Release name: ${{ github.event.release.name }}"
+        echo "Release body: ${{ github.event.release.body }}"

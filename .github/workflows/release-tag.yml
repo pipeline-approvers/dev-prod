@@ -22,16 +22,30 @@ jobs:
             COMMIT_MESSAGE=$(git log -1 --pretty=%B)
             echo "commit message: $COMMIT_MESSAGE"
 
-    - name:
+    - name: echo commit message
       run: |
         echo "the last commit message in the pr is : $COMMIT_MESSAGE"
 
-    - name: Get version from file or PR title (optional)
-      id: get_version
+    - name: get the pr title
       run: |
-            # Define your method of determining the version, e.g., from a version file or PR title
-            VERSION=$(grep 'version' version.txt | awk '{print $2}') # Example
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "pull request title: ${{github.event.pull_request.title }}"
+
+    - name: Get version from file or PR title (optional)
+      id: extract_version
+      run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          VERSION=$(echo "$PR_TITLE" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+')
+          if [ -z "$VERSION" ]; then
+            echo "No version found in PR title"
+            exit 1
+          fi
+          echo "Extracted version: $VERSION"
+          echo "::set-output name=VERSION::$VERSION"
+    
+    - name: use extracted version
+      run: |
+        echo "The extracted version is: ${{ steps.extract_version.outputs.VERSION }}"
+          
 
     - name: Create a tag
       run: |

@@ -1,1 +1,8 @@
-
+name: Create Release on PR Merge
+on:
+  pull_request:
+    types: [merged]  # Triggers when a PR is closed
+    branches:
+      - main  
+    paths:
+      - 'frontend/**'

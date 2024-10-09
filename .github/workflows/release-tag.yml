@@ -1,11 +1,9 @@
 name: Create Release on PR Merge
 on:
   pull_request:
-    types: [closed]  # Triggers when a PR is closed
+    # types: [closed]  # Triggers when a PR is closed
     branches:
       - main         # Only triggers for PRs merged into the main branch
-    paths:
-      - 'frontend/**'
 jobs:
   create_release:
     if: github.event.pull_request.merged == true  # Only run if the PR was merged
@@ -19,7 +17,11 @@ jobs:
       run: |
             # Extract the commit message from the most recent commit on the main branch
             COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-            echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+            echo "commit message: $COMMIT_MESSAGE"
+
+    - name:
+      run: |
+        echo "the last commit message in the pr is : $COMMIT_MESSAGE"
 
     - name: Get version from file or PR title (optional)
       id: get_version

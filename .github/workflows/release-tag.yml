@@ -1,7 +1,7 @@
 name: Create Release on PR Merge
 on:
   pull_request:
-    # types: [closed]  # Triggers when a PR is closed
+    types: [closed]  # Triggers when a PR is closed
     branches:
       - main         # Only triggers for PRs merged into the main branch
 jobs:

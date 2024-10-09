@@ -55,7 +55,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.VERSION }}
+        tag_name: ${{ steps.extract_version.outputs.VERSION }}
         release_name: Release ${{ env.VERSION }}
         body: ${{ env.COMMIT_MESSAGE }}  # Use the final commit message as the release notes
         draft: false

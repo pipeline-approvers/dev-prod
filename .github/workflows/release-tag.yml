@@ -1,1 +1,43 @@
+name: Create Release on PR Merge
+on:
+  pull_request:
+    # types: [closed]  # Triggers when a PR is closed
+    branches:
+      - main         # Only triggers for PRs merged into the main branch
+jobs:
+  create_release:
+    if: github.event.pull_request.merged == true  # Only run if the PR was merged
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
+    - name: Get the final commit message
+      id: get_commit_message
+      run: |
+            # Extract the commit message from the most recent commit on the main branch
+            COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+            echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+
+    - name: Get version from file or PR title (optional)
+      id: get_version
+      run: |
+            # Define your method of determining the version, e.g., from a version file or PR title
+            VERSION=$(grep 'version' version.txt | awk '{print $2}') # Example
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Create a tag
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git tag ${{ env.VERSION }}
+        git push origin ${{ env.VERSION }}
+
+    - name: Create GitHub release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
+        body: ${{ env.COMMIT_MESSAGE }}  # Use the final commit message as the release notes
+        draft: false
+        prerelease: false   

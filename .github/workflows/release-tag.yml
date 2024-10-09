@@ -32,8 +32,8 @@ jobs:
 
     - name: Create a tag
       run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
+        git config user.name "madhukar-hanumanthappa"
+        git config user.email "madhukar.hanumanthappa@nuware.com"
         git tag ${{ env.VERSION }}
         git push origin ${{ env.VERSION }}
 

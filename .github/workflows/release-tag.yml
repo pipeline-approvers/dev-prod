@@ -4,6 +4,9 @@ on:
     types: [closed]  # Triggers when a PR is closed
     branches:
       - main         # Only triggers for PRs merged into the main branch
+permissions:
+  id-token: write
+  contents: write
 jobs:
   create_release:
     if: github.event.pull_request.merged == true  # Only run if the PR was merged

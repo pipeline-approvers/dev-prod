@@ -2,8 +2,8 @@ name: uat-prod-deployment
 on:
   release:
     types: [published]  # Triggers when a new release is created
-  # create:
-  #   tags: "*"  # Triggers when a new tag is created
+  create:
+    tags: "*"  # Triggers when a new tag is created
 permissions:
   id-token: write
   contents: read
